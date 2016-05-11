@@ -532,7 +532,8 @@ static void update_cpu_busy_time(struct task_struct *p, struct rq *rq,
 	BUG();
 }
 
-static int account_busy_for_task_demand(struct task_struct *p, int event)
+static int
+account_busy_for_task_demand(struct rq *rq, struct task_struct *p, int event)
 {
 	/* No need to bother updating task demand for exiting tasks
 	 * or the idle task. */
@@ -547,6 +548,13 @@ static int account_busy_for_task_demand(struct task_struct *p, int event)
 			 (event == PICK_NEXT_TASK || event == TASK_MIGRATE)))
 		return 0;
 
+	/*
+	 * The idle exit time is not accounted for the first task _picked_ up to
+	 * run on the idle CPU.
+	 */
+	if (event == PICK_NEXT_TASK && rq->curr == rq->idle)
+		return 0;
+	
 	return 1;
 }
 
@@ -693,7 +701,7 @@ static void update_task_demand(struct task_struct *p, struct rq *rq,
 	u32 window_size = walt_ravg_window;
 
 	new_window = mark_start < window_start;
-	if (!account_busy_for_task_demand(p, event)) {
+	if (!account_busy_for_task_demand(rq, p, event)) {
 		if (new_window)
 			/* If the time accounted isn't being accounted as
 			 * busy time, and a new window started, only the
