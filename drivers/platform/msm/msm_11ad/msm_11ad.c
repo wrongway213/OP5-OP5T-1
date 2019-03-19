@@ -1573,5 +1573,4 @@ void msm_11ad_modexit(void)
 EXPORT_SYMBOL(msm_11ad_modexit);
 
 MODULE_LICENSE("GPL v2");
-MODULE_DESCRIPTION("Platform driver for qcom 11ad card");
-
+MODULE_DESCRIPTION("Platform driver for qcom 11ad card")
