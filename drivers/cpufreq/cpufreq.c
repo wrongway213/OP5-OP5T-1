@@ -35,7 +35,7 @@
 #include <trace/events/power.h>
 #include <linux/state_notifier.h>
 
-#define SCREEN_OFF_CEILING    1248000
+#define SCREEN_OFF_CEILING    1056000
 
 static LIST_HEAD(cpufreq_policy_list);
 
